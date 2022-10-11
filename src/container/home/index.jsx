@@ -7,6 +7,8 @@ const Home = () => {
     const [save, setSave] = useState(false);
     const [mark, setMark] = useState(false);
     const [editable, setEditable] = useState('')
+    const [touched,setTouched] = useState();
+
 
     
     const handleChange = (e) => {
@@ -16,8 +18,12 @@ const Home = () => {
     const addTask = () => {
         // const list = [...list]
         // list.push(item)
-        setList(prev => [...prev, item])
-        setItem('')
+        if(item === ""){
+            alert("Add task")
+        }else{
+            setList(prev => [...prev, item])
+            setItem('')
+        }
     }
 
     // Delete Item in array
@@ -27,20 +33,35 @@ const Home = () => {
         setList(newList);
     }
 
-    
+
     // update Items in the array
     const updateList = () => {
         list.splice(editable, 1, item);
         setItem(editable);
         setSave(!save)
         setItem('')
+        setTouched("")
     }
 
     // Edit the array
     const editItem = (v, i) => {
+        // if(i === touched){
+        //     setTouched("")
+        // }
+        // else{
+        //     setTouched(i)
+        // }
+        setTouched(i)
         setSave(!save);
         setEditable(i)
         setItem(v);
+    }
+
+    // Cancel Item
+    const Cancel = () => {
+        setTouched("");
+        setSave(false);
+        setItem("");
     }
 
 
@@ -72,7 +93,14 @@ const Home = () => {
                                     } */}
                                     <p>{val}</p>
                                     <button onClick={(ind) => editItem(val, i)}>Edit</button>
-                                    <button className='del' onClick={(ind) => deleteItem(i)}>Del</button>
+                                    {
+                                        touched === i 
+                                        ? 
+                                        <button className='del' onClick={(ind) => Cancel(i)}>Cancel</button>
+                                        :
+                                        <button className='del' onClick={(ind) => deleteItem(i)}>Delete</button>
+                                    }
+                                    {/* <button className='del' onClick={(ind) => deleteItem(i)}>{ touched === i ? "Cancel" : "Delete"}</button> */}
                                 </div>
                             )
                         })}
